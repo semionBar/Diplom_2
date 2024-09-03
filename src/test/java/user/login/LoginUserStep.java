@@ -1,55 +1,50 @@
-package user.create;
+package user.login;
 
 import com.google.gson.Gson;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import org.hamcrest.Matchers;
+import user.create.CreateUserStep;
+import user.create.User;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 
-public class CreateUserStep {
+public class LoginUserStep {
 
     Response response;
 
     @Step
-    public void sendCreateUserRequest(User user) {
+    public void sendLoginUserRequest(User createUserModel) {
 
         Gson gson = new Gson();
 
-        System.out.println(gson.toJson(user));
+        System.out.println(gson.toJson(createUserModel));
 
         response = given()
                 .header("Content-type", "application/json")
                 //.auth().oauth2("подставь_сюда_свой_токен")
                 .and()
-                .body(user)
+                .body(createUserModel)
                 .when()
-                .post("api/auth/register");
+                .post("api/auth/login");
 
         System.out.println(response.body().asString());
         System.out.println(response.statusCode());
 
     }
 
-    @Step
-    public void sendDeleteUserRequest(User user) {
+    @Step("Создать нового юзера")
+    public User createNewUser() {
+        User user = new User();
 
-        Gson gson = new Gson();
+        user.generateNewUser();
 
-        System.out.println(gson.toJson(user));
+        CreateUserStep createUserStep = new CreateUserStep();
 
-        response = given()
-                .header("Content-type", "application/json")
-                //.auth().oauth2("подставь_сюда_свой_токен")
-                .and()
-                .body(user)
-                .when()
-                .delete("api/auth/register");
+        createUserStep.sendCreateUserRequest(user);
 
-        System.out.println(response.body().asString());
-
-        System.out.println(response.statusCode());
+        return user;
     }
 
     @Step
@@ -66,8 +61,4 @@ public class CreateUserStep {
     public void checkBodyFieldNotNull(String field) {
         response.then().assertThat().body(field, Matchers.notNullValue());
     }
-
-
-
 }
-
