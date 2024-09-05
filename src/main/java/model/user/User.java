@@ -28,4 +28,14 @@ public class User {
         name = String.format("John%s", randomValue);
     }
 
+    public User(int seed) {
+        int randomValue = 10000000 + seed + (int) (Math.random() * (99999999 + seed - 10000000 + 1));
+
+        email = String.format("email%s@yandex.ru", randomValue);
+
+        password = String.format("%s", randomValue);
+
+        name = String.format("John%s", randomValue);
+    }
+
 }

@@ -14,6 +14,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 public class PatchUserStep {
     Response response;
 
+    private final String userDataPath = "api/auth/user";
     @Step
     public void sendGetUserDataRequestWithToken(LoggedInUserModel loggedInUserModel) {
 
@@ -21,7 +22,7 @@ public class PatchUserStep {
                 .header("Content-type", "application/json")
                 .header("Authorization", loggedInUserModel.getAccessToken())
                 .when()
-                .get("api/auth/user");
+                .get(userDataPath);
 
     }
 
@@ -32,7 +33,7 @@ public class PatchUserStep {
                 .header("Content-type", "application/json")
                 //.header("Authorization", loggedInUser.getAccessToken())
                 .when()
-                .get("api/auth/user");
+                .get(userDataPath);
 
     }
 
@@ -43,7 +44,7 @@ public class PatchUserStep {
                 .header("Content-type", "application/json")
                 //.header("Authorization", loggedInUser.getAccessToken())
                 .when()
-                .get("api/auth/user");
+                .get(userDataPath);
 
 
     }
@@ -57,7 +58,7 @@ public class PatchUserStep {
                 .and()
                 .body(newUser)
                 .when()
-                .patch("api/auth/user");
+                .patch(userDataPath);
 
 
 
