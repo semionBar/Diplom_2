@@ -47,39 +47,23 @@ public class CreateUserStep {
     }
 
     @Step
-    public void sendDeleteUserRequest(LoggedInUserModel loggedInUserModel) {
-
-        if (loggedInUserModel != null) {
-            if (loggedInUserModel.getAccessToken() != null) {
-
-                response = given()
-                        .header("Content-type", "application/json")
-                        .header("Authorization", loggedInUserModel.getAccessToken())
-                        //.auth().oauth2("подставь_сюда_свой_токен")
-                        .when()
-                        .delete("api/auth/user");
-
-            }
-        }
-    }
-
     public void clearUserData(LoggedInUserModel loggedInUserModel) {
         SharedStep.sendDeleteUserRequest(loggedInUserModel, response);
     }
 
     @Step
     public void checkResponseCode(int expectedCode) {
-        response.then().statusCode(expectedCode);
+        SharedStep.checkResponseCode(expectedCode, response);
     }
 
     @Step("Проверить поле из body равно ожидаемому значению")
     public void checkBodyFieldEqualsObject(String field, Object object) {
-        response.then().assertThat().body(field,equalTo(object));
+        SharedStep.checkBodyFieldEqualsObject(field, object, response);
     }
 
     @Step("Проверить, что поле из body присутствует в ответе")
     public void checkBodyFieldNotNull(String field) {
-        response.then().assertThat().body(field, Matchers.notNullValue());
+        SharedStep.checkBodyFieldNotNull(field, response);
     }
 
 

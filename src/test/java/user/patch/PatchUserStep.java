@@ -82,17 +82,17 @@ public class PatchUserStep {
 
     @Step
     public void checkResponseCode(int expectedCode) {
-        response.then().statusCode(expectedCode);
+        SharedStep.checkResponseCode(expectedCode, response);
     }
 
     @Step("Проверить поле из body равно ожидаемому значению")
     public void checkBodyFieldEqualsObject(String field, Object object) {
-        response.then().assertThat().body(field,equalTo(object));
+        SharedStep.checkBodyFieldEqualsObject(field, object, response);
     }
 
     @Step("Проверить, что поле из body присутствует в ответе")
     public void checkBodyFieldNotNull(String field) {
-        response.then().assertThat().body(field, Matchers.notNullValue());
+        SharedStep.checkBodyFieldNotNull(field, response);
     }
 
 }

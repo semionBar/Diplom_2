@@ -69,10 +69,6 @@ public class MakeOrdersStep {
         return createUserStep.getLoggedInUser();
     }
 
-    @Step
-    public void clearUserData(LoggedInUserModel loggedInUserModel) {
-        SharedStep.sendDeleteUserRequest(loggedInUserModel, response);
-    }
 
     @Step
     public OrderResponseModel getOrderResponseModel() {
@@ -102,5 +98,25 @@ public class MakeOrdersStep {
         ingredientIdListRequestModel.setIngredients(List.of(ingredientListResponseModel.getRandomBunId(), ingredientListResponseModel.getRandomMainId(), ingredientListResponseModel.getRandomSauceId()));
 
         return ingredientIdListRequestModel;
+    }
+
+    @Step
+    public void clearUserData(LoggedInUserModel loggedInUserModel) {
+        SharedStep.sendDeleteUserRequest(loggedInUserModel, response);
+    }
+
+    @Step
+    public void checkResponseCode(int expectedCode) {
+        SharedStep.checkResponseCode(expectedCode, response);
+    }
+
+    @Step("Проверить поле из body равно ожидаемому значению")
+    public void checkBodyFieldEqualsObject(String field, Object object) {
+        SharedStep.checkBodyFieldEqualsObject(field, object, response);
+    }
+
+    @Step("Проверить, что поле из body присутствует в ответе")
+    public void checkBodyFieldNotNull(String field) {
+        SharedStep.checkBodyFieldNotNull(field, response);
     }
 }
