@@ -4,8 +4,8 @@ import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import org.hamcrest.Matchers;
 import user.create.CreateUserStep;
-import user.LoggedInUserModel;
-import user.User;
+import model.user.LoggedInUserModel;
+import model.user.User;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;

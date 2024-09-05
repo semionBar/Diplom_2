@@ -29,9 +29,17 @@ public class MakeOrdersTest {
     }
 
     @Test
-    public void zeroTest() {
+    public void setMakeOrderTest() {
 
+        ingredientIdListRequestModel = makeOrdersStep.getIngredientIdListRequestModel();
+
+
+
+        System.out.println(new Gson().toJson("Ответ:"));
         System.out.println(new Gson().toJson(ingredientListResponseModel));
+
+        System.out.println(new Gson().toJson("Тело запроса"));
+        System.out.println(new Gson().toJson(ingredientIdListRequestModel));
 
         System.out.println(ingredientListResponseModel.getRandomBunId());
         System.out.println(ingredientListResponseModel.getRandomMainId());

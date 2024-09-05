@@ -1,4 +1,4 @@
-package user;
+package model.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -4,8 +4,8 @@ import io.restassured.RestAssured;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import user.LoggedInUserModel;
-import user.User;
+import model.user.LoggedInUserModel;
+import model.user.User;
 
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;

@@ -1,4 +1,4 @@
-package order;
+package model.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Order {
+public class LoggedInUserModel {
 
-    private int number;
+    private User user;
+    private String accessToken;
+    private String refreshToken;
 
 }

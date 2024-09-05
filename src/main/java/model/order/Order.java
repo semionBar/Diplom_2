@@ -1,4 +1,4 @@
-package order;
+package model.order;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,13 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderResponseModel {
+public class Order {
 
-    private String name;
+    private int number;
 
-    private Order order;
-
-    private boolean success;
-
-    private String message;
 }
