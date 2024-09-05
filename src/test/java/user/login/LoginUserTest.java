@@ -68,7 +68,7 @@ public class LoginUserTest {
 
     @After
     public void clearUserData() {
-        loginUserStep.deleteUserData(loggedInUserModel);
+        loginUserStep.clearUserData(loggedInUserModel);
     }
 
 

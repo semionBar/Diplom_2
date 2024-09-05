@@ -5,6 +5,7 @@ import io.restassured.response.Response;
 import org.hamcrest.Matchers;
 import model.user.LoggedInUserModel;
 import model.user.User;
+import shared.SharedStep;
 
 import static io.restassured.RestAssured.given;
 import static org.apache.http.HttpStatus.SC_OK;
@@ -48,16 +49,22 @@ public class CreateUserStep {
     @Step
     public void sendDeleteUserRequest(LoggedInUserModel loggedInUserModel) {
 
-        if (loggedInUserModel.getAccessToken() != null) {
+        if (loggedInUserModel != null) {
+            if (loggedInUserModel.getAccessToken() != null) {
 
-            response = given()
-                    .header("Content-type", "application/json")
-                    .header("Authorization", loggedInUserModel.getAccessToken())
-                    //.auth().oauth2("подставь_сюда_свой_токен")
-                    .when()
-                    .delete("api/auth/user");
+                response = given()
+                        .header("Content-type", "application/json")
+                        .header("Authorization", loggedInUserModel.getAccessToken())
+                        //.auth().oauth2("подставь_сюда_свой_токен")
+                        .when()
+                        .delete("api/auth/user");
 
+            }
         }
+    }
+
+    public void clearUserData(LoggedInUserModel loggedInUserModel) {
+        SharedStep.sendDeleteUserRequest(loggedInUserModel, response);
     }
 
     @Step

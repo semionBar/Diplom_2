@@ -3,6 +3,7 @@ package user.patch;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import org.hamcrest.Matchers;
+import shared.SharedStep;
 import user.create.CreateUserStep;
 import model.user.LoggedInUserModel;
 import model.user.User;
@@ -44,8 +45,6 @@ public class PatchUserStep {
                 .when()
                 .get("api/auth/user");
 
-        System.out.println(response.statusCode());
-        System.out.println(response.body().asString());
 
     }
 
@@ -78,9 +77,7 @@ public class PatchUserStep {
 
     @Step
     public void clearUserData(LoggedInUserModel loggedInUserModel) {
-        CreateUserStep createUserStep = new CreateUserStep();
-
-        createUserStep.sendDeleteUserRequest(loggedInUserModel);
+        SharedStep.sendDeleteUserRequest(loggedInUserModel, response);
     }
 
     @Step

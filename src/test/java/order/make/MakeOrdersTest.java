@@ -1,9 +1,11 @@
 package order.make;
 
-import com.google.gson.Gson;
 import model.ingredient.IngredientIdListRequestModel;
 import model.ingredient.IngredientListResponseModel;
 import io.restassured.RestAssured;
+import model.user.LoggedInUserModel;
+import model.user.User;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,6 +16,8 @@ public class MakeOrdersTest {
     IngredientListResponseModel ingredientListResponseModel;
 
     IngredientIdListRequestModel ingredientIdListRequestModel;
+
+    LoggedInUserModel loggedInUserModel;
     @Before
     public void setUp() {
         RestAssured.baseURI = "https://stellarburgers.nomoreparties.site";
@@ -29,22 +33,28 @@ public class MakeOrdersTest {
     }
 
     @Test
-    public void setMakeOrderTest() {
+    public void makeOrderWithoutTokenTest() {
 
         ingredientIdListRequestModel = makeOrdersStep.getIngredientIdListRequestModel();
 
+        makeOrdersStep.sendMakeOrderRequestWithOutToken(ingredientIdListRequestModel);
+    }
 
+    @Test public void makeOrderWithTokenTest() {
 
-        System.out.println(new Gson().toJson("Ответ:"));
-        System.out.println(new Gson().toJson(ingredientListResponseModel));
+        User user = new User();
 
-        System.out.println(new Gson().toJson("Тело запроса"));
-        System.out.println(new Gson().toJson(ingredientIdListRequestModel));
+        user.generateNewUser();
 
-        System.out.println(ingredientListResponseModel.getRandomBunId());
-        System.out.println(ingredientListResponseModel.getRandomMainId());
-        System.out.println(ingredientListResponseModel.getRandomSauceId());
+        loggedInUserModel = makeOrdersStep.getLoggedInUserModel(user);
 
+        ingredientIdListRequestModel = makeOrdersStep.getIngredientIdListRequestModel();
 
+        makeOrdersStep.sendMakeOrderRequestWithToken(ingredientIdListRequestModel, loggedInUserModel);
+    }
+
+    @After
+    public void clearUserData() {
+        makeOrdersStep.clearUserData(loggedInUserModel);
     }
 }

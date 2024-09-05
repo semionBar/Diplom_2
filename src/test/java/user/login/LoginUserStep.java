@@ -3,6 +3,7 @@ package user.login;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import org.hamcrest.Matchers;
+import shared.SharedStep;
 import user.create.CreateUserStep;
 import model.user.LoggedInUserModel;
 import model.user.User;
@@ -68,10 +69,8 @@ public class LoginUserStep {
     }
 
     @Step
-    public void deleteUserData(LoggedInUserModel loggedInUserModel) {
-        CreateUserStep createUserStep = new CreateUserStep();
-
-        createUserStep.sendDeleteUserRequest(loggedInUserModel);
+    public void clearUserData(LoggedInUserModel loggedInUserModel) {
+        SharedStep.sendDeleteUserRequest(loggedInUserModel, response);
     }
 
     @Step

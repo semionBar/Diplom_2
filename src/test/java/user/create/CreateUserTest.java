@@ -83,7 +83,7 @@ public class CreateUserTest {
 
     @After
     public void clearData() {
-        createUserStep.sendDeleteUserRequest(loggedInUserModel);
+        createUserStep.clearUserData(loggedInUserModel);
     }
 
 }

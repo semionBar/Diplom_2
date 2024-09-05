@@ -6,6 +6,10 @@ import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import model.ingredient.IngredientModel;
 import model.order.OrderResponseModel;
+import model.user.LoggedInUserModel;
+import model.user.User;
+import shared.SharedStep;
+import user.create.CreateUserStep;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +30,7 @@ public class MakeOrdersStep {
     }
 
     @Step
-    public void sendMakeOrderRequest(IngredientIdListRequestModel ingredientIdListRequestModel) {
+    public void sendMakeOrderRequestWithOutToken(IngredientIdListRequestModel ingredientIdListRequestModel) {
 
         response = given()
                 .header("Content-type", "application/json")
@@ -34,6 +38,40 @@ public class MakeOrdersStep {
                 .body(ingredientIdListRequestModel)
                 .post("api/orders");
 
+
+        System.out.println(response.statusCode());
+        System.out.println(response.body().asString());
+
+    }
+
+    @Step
+    public void sendMakeOrderRequestWithToken(IngredientIdListRequestModel ingredientIdListRequestModel, LoggedInUserModel loggedInUserModel) {
+
+        response = given()
+                .header("Content-type", "application/json")
+                .header("Authorization", loggedInUserModel.getAccessToken())
+                .and()
+                .body(ingredientIdListRequestModel)
+                .post("api/orders");
+
+
+        System.out.println(response.statusCode());
+        System.out.println(response.body().asString());
+
+    }
+
+    @Step
+    public LoggedInUserModel getLoggedInUserModel(User user) {
+        CreateUserStep createUserStep = new CreateUserStep();
+
+        createUserStep.sendCreateUserRequest(user);
+
+        return createUserStep.getLoggedInUser();
+    }
+
+    @Step
+    public void clearUserData(LoggedInUserModel loggedInUserModel) {
+        SharedStep.sendDeleteUserRequest(loggedInUserModel, response);
     }
 
     @Step
