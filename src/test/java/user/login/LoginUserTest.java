@@ -4,7 +4,8 @@ import io.restassured.RestAssured;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import user.create.User;
+import user.LoggedInUser;
+import user.User;
 
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
@@ -15,6 +16,8 @@ public class LoginUserTest {
 
     LoginUserStep loginUserStep;
 
+    LoggedInUser loggedInUser;
+
     @Before
     public void setUp() {
 
@@ -23,12 +26,15 @@ public class LoginUserTest {
     }
 
     @Test
-    public void zeroTest() {
+    public void loginUserTest() {
 
         loginUserStep = new LoginUserStep();
-        user = loginUserStep.createNewUser();
+
+        user = loginUserStep.createNewUserAndRegister();
 
         loginUserStep.sendLoginUserRequest(user);
+
+        loggedInUser = loginUserStep.getLoggedInUser(user);
 
         loginUserStep.checkResponseCode(SC_OK);
 
@@ -43,7 +49,10 @@ public class LoginUserTest {
 
         loginUserStep = new LoginUserStep();
 
-        user = new User();
+        user = loginUserStep.createNewUserAndRegister();
+
+        loggedInUser = loginUserStep.getLoggedInUser(user);
+
         user.generateNewUser();
 
         loginUserStep.sendLoginUserRequest(user);
@@ -55,9 +64,11 @@ public class LoginUserTest {
 
     }
 
+
+
     @After
     public void clearUserData() {
-
+        loginUserStep.deleteUserData(loggedInUser);
     }
 
 

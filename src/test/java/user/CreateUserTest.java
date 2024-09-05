@@ -1,4 +1,4 @@
-package user.create;
+package user;
 
 import io.restassured.RestAssured;
 import org.junit.After;
@@ -12,21 +12,24 @@ public class CreateUserTest {
 
     private User user;
 
+    private LoggedInUser loggedInUser;
+
     private CreateUserStep createUserStep;
 
     @Before
     public void setUp() {
         RestAssured.baseURI = "https://stellarburgers.nomoreparties.site";
-    }
-
-    @Test
-    public void zeroTest() {
 
         user = new User();
 
         user.generateNewUser();
 
         createUserStep = new CreateUserStep();
+    }
+
+    @Test
+    public void createUserTest() {
+
 
         createUserStep.sendCreateUserRequest(user);
 
@@ -38,17 +41,16 @@ public class CreateUserTest {
 
         createUserStep.checkBodyFieldNotNull("refreshToken");
 
+        loggedInUser = createUserStep.getLoggedInUser();
+
     }
 
     @Test
     public void createExistingUserTest() {
-        user = new User();
-
-        user.generateNewUser();
-
-        createUserStep = new CreateUserStep();
 
         createUserStep.sendCreateUserRequest(user);
+
+        loggedInUser = createUserStep.getLoggedInUser();
 
         createUserStep.sendCreateUserRequest(user);
 
@@ -57,17 +59,13 @@ public class CreateUserTest {
         createUserStep.checkBodyFieldEqualsObject( "success", false);
 
         createUserStep.checkBodyFieldNotNull("message");
+
     }
 
     @Test
     public void createUserNoPasswordFieldTest() {
-        user = new User();
-
-        user.generateNewUser();
 
         user.setPassword(null);
-
-        createUserStep = new CreateUserStep();
 
         createUserStep.sendCreateUserRequest(user);
 
@@ -76,11 +74,14 @@ public class CreateUserTest {
         createUserStep.checkBodyFieldEqualsObject( "success", false);
 
         createUserStep.checkBodyFieldNotNull("message");
+
+        loggedInUser = createUserStep.getLoggedInUser();
+
     }
 
     @After
     public void clearData() {
-        createUserStep.sendDeleteUserRequest(user);
+        createUserStep.sendDeleteUserRequest(loggedInUser);
     }
 
 }

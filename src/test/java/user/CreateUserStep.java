@@ -1,4 +1,4 @@
-package user.create;
+package user;
 
 import com.google.gson.Gson;
 import io.qameta.allure.Step;
@@ -6,18 +6,16 @@ import io.restassured.response.Response;
 import org.hamcrest.Matchers;
 
 import static io.restassured.RestAssured.given;
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.equalTo;
 
 public class CreateUserStep {
 
     Response response;
 
+
     @Step
     public void sendCreateUserRequest(User user) {
-
-        Gson gson = new Gson();
-
-        System.out.println(gson.toJson(user));
 
         response = given()
                 .header("Content-type", "application/json")
@@ -33,23 +31,40 @@ public class CreateUserStep {
     }
 
     @Step
-    public void sendDeleteUserRequest(User user) {
+    public LoggedInUser getLoggedInUser() {
+        if (response.statusCode() == SC_OK) {
 
-        Gson gson = new Gson();
 
-        System.out.println(gson.toJson(user));
+            LoggedInUser loggedInUser = new LoggedInUser();
+            loggedInUser = response.body().as(LoggedInUser.class);
 
-        response = given()
-                .header("Content-type", "application/json")
-                //.auth().oauth2("подставь_сюда_свой_токен")
-                .and()
-                .body(user)
-                .when()
-                .delete("api/auth/register");
+            return loggedInUser;
+        }
+        else {
 
-        System.out.println(response.body().asString());
+            return new LoggedInUser();
+        }
+    }
 
-        System.out.println(response.statusCode());
+    @Step
+    public void sendDeleteUserRequest(LoggedInUser loggedInUser) {
+
+        if (loggedInUser.getAccessToken() != null) {
+
+            response = given()
+                    .header("Content-type", "application/json")
+                    .header("Authorization", loggedInUser.getAccessToken())
+                    //.auth().oauth2("подставь_сюда_свой_токен")
+                    .when()
+                    .delete("api/auth/user");
+
+
+            Gson gson = new Gson();
+
+            System.out.println(gson.toJson(loggedInUser.getAccessToken()));
+            System.out.println(response.statusCode());
+            System.out.println(response.body().asString());
+        }
     }
 
     @Step

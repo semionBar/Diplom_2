@@ -1,5 +1,6 @@
-package user.login;
+package user.patch;
 
+import com.google.gson.Gson;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import org.hamcrest.Matchers;
@@ -10,72 +11,63 @@ import user.User;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 
-public class LoginUserStep {
-
+public class PatchUserStep {
     Response response;
 
     @Step
-    public void sendLoginUserRequest(User user) {
+    public void sendGetUserDataRequestWithToken(LoggedInUser loggedInUser) {
 
+        Gson gson = new Gson();
+
+        System.out.println(gson.toJson(loggedInUser));
 
         response = given()
                 .header("Content-type", "application/json")
-                //.auth().oauth2("подставь_сюда_свой_токен")
-                .and()
-                .body(user)
+                .header("Authorization", loggedInUser.getAccessToken())
                 .when()
-                .post("api/auth/login");
+                .get("api/auth/user");
 
-
-        System.out.println(response.statusCode());
         System.out.println(response.body().asString());
-
-
+        System.out.println(response.statusCode());
     }
+
+    @Step
+    public void sendPatchUserDataRequestWithToken(LoggedInUser loggedInUser, User newUser) {
+
+        Gson gson = new Gson();
+
+        System.out.println(gson.toJson(loggedInUser));
+        System.out.println(gson.toJson(newUser));
+
+        response = given()
+                .header("Content-type", "application/json")
+                .header("Authorization", loggedInUser.getAccessToken())
+                .and()
+                .body(newUser)
+                .when()
+                .patch("api/auth/user");
+
+        System.out.println(response.body().asString());
+        System.out.println(response.statusCode());
+    }
+
 
     @Step
     public LoggedInUser getLoggedInUser(User user) {
 
-        sendLoginUserRequest(user);
-
-        LoggedInUser loggedInUser;
-
-        loggedInUser = response.body().as(LoggedInUser.class);
-
-        return loggedInUser;
-    }
-
-    @Step("Создать нового юзера и зарегистрироваться")
-    public User createNewUserAndRegister() {
-        User user = createNewUser();
-
-        registerUser(user);
-
-        return user;
-    }
-
-    @Step
-    public User createNewUser() {
-        User user = new User();
-
-        user.generateNewUser();
-
-        return user;
-    }
-
-    @Step
-    public void registerUser(User user) {
-
         CreateUserStep createUserStep = new CreateUserStep();
 
         createUserStep.sendCreateUserRequest(user);
+
+        System.out.println(new Gson().toJson(user));
+
+        return createUserStep.getLoggedInUser();
     }
 
-    @Step
-    public void deleteUserData(LoggedInUser loggedInUser) {
-        CreateUserStep createUserStep = new CreateUserStep();
 
-        createUserStep.sendDeleteUserRequest(loggedInUser);
+    @Step
+    public void clearUserData() {
+
     }
 
     @Step
@@ -92,4 +84,5 @@ public class LoginUserStep {
     public void checkBodyFieldNotNull(String field) {
         response.then().assertThat().body(field, Matchers.notNullValue());
     }
+
 }
