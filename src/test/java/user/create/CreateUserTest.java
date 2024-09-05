@@ -1,9 +1,11 @@
-package user;
+package user.create;
 
 import io.restassured.RestAssured;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import user.LoggedInUserModel;
+import user.User;
 
 import static org.apache.http.HttpStatus.SC_FORBIDDEN;
 import static org.apache.http.HttpStatus.SC_OK;
@@ -12,7 +14,7 @@ public class CreateUserTest {
 
     private User user;
 
-    private LoggedInUser loggedInUser;
+    private LoggedInUserModel loggedInUserModel;
 
     private CreateUserStep createUserStep;
 
@@ -41,16 +43,16 @@ public class CreateUserTest {
 
         createUserStep.checkBodyFieldNotNull("refreshToken");
 
-        loggedInUser = createUserStep.getLoggedInUser();
+        loggedInUserModel = createUserStep.getLoggedInUser();
 
     }
 
     @Test
-    public void createExistingUserTest() {
+    public void createExistingUserReturns403() {
 
         createUserStep.sendCreateUserRequest(user);
 
-        loggedInUser = createUserStep.getLoggedInUser();
+        loggedInUserModel = createUserStep.getLoggedInUser();
 
         createUserStep.sendCreateUserRequest(user);
 
@@ -63,7 +65,7 @@ public class CreateUserTest {
     }
 
     @Test
-    public void createUserNoPasswordFieldTest() {
+    public void createUserNoPasswordFieldReturns403() {
 
         user.setPassword(null);
 
@@ -75,13 +77,13 @@ public class CreateUserTest {
 
         createUserStep.checkBodyFieldNotNull("message");
 
-        loggedInUser = createUserStep.getLoggedInUser();
+        loggedInUserModel = createUserStep.getLoggedInUser();
 
     }
 
     @After
     public void clearData() {
-        createUserStep.sendDeleteUserRequest(loggedInUser);
+        createUserStep.sendDeleteUserRequest(loggedInUserModel);
     }
 
 }

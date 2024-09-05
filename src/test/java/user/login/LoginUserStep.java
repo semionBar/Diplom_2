@@ -3,8 +3,8 @@ package user.login;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import org.hamcrest.Matchers;
-import user.CreateUserStep;
-import user.LoggedInUser;
+import user.create.CreateUserStep;
+import user.LoggedInUserModel;
 import user.User;
 
 import static io.restassured.RestAssured.given;
@@ -27,22 +27,18 @@ public class LoginUserStep {
                 .post("api/auth/login");
 
 
-        System.out.println(response.statusCode());
-        System.out.println(response.body().asString());
-
-
     }
 
     @Step
-    public LoggedInUser getLoggedInUser(User user) {
+    public LoggedInUserModel getLoggedInUser(User user) {
 
         sendLoginUserRequest(user);
 
-        LoggedInUser loggedInUser;
+        LoggedInUserModel loggedInUserModel;
 
-        loggedInUser = response.body().as(LoggedInUser.class);
+        loggedInUserModel = response.body().as(LoggedInUserModel.class);
 
-        return loggedInUser;
+        return loggedInUserModel;
     }
 
     @Step("Создать нового юзера и зарегистрироваться")
@@ -72,10 +68,10 @@ public class LoginUserStep {
     }
 
     @Step
-    public void deleteUserData(LoggedInUser loggedInUser) {
+    public void deleteUserData(LoggedInUserModel loggedInUserModel) {
         CreateUserStep createUserStep = new CreateUserStep();
 
-        createUserStep.sendDeleteUserRequest(loggedInUser);
+        createUserStep.sendDeleteUserRequest(loggedInUserModel);
     }
 
     @Step

@@ -1,11 +1,10 @@
 package user.patch;
 
-import com.google.gson.Gson;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import org.hamcrest.Matchers;
-import user.CreateUserStep;
-import user.LoggedInUser;
+import user.create.CreateUserStep;
+import user.LoggedInUserModel;
 import user.User;
 
 import static io.restassured.RestAssured.given;
@@ -15,59 +14,73 @@ public class PatchUserStep {
     Response response;
 
     @Step
-    public void sendGetUserDataRequestWithToken(LoggedInUser loggedInUser) {
-
-        Gson gson = new Gson();
-
-        System.out.println(gson.toJson(loggedInUser));
+    public void sendGetUserDataRequestWithToken(LoggedInUserModel loggedInUserModel) {
 
         response = given()
                 .header("Content-type", "application/json")
-                .header("Authorization", loggedInUser.getAccessToken())
+                .header("Authorization", loggedInUserModel.getAccessToken())
                 .when()
                 .get("api/auth/user");
 
-        System.out.println(response.body().asString());
-        System.out.println(response.statusCode());
     }
 
     @Step
-    public void sendPatchUserDataRequestWithToken(LoggedInUser loggedInUser, User newUser) {
-
-        Gson gson = new Gson();
-
-        System.out.println(gson.toJson(loggedInUser));
-        System.out.println(gson.toJson(newUser));
+    public void sendGetUserDataRequestWitOutToken() {
 
         response = given()
                 .header("Content-type", "application/json")
-                .header("Authorization", loggedInUser.getAccessToken())
+                //.header("Authorization", loggedInUser.getAccessToken())
+                .when()
+                .get("api/auth/user");
+
+    }
+
+    @Step
+    public void sendPatchUserDataRequestWithOutToken() {
+
+        response = given()
+                .header("Content-type", "application/json")
+                //.header("Authorization", loggedInUser.getAccessToken())
+                .when()
+                .get("api/auth/user");
+
+        System.out.println(response.statusCode());
+        System.out.println(response.body().asString());
+
+    }
+
+    @Step
+    public void sendPatchUserDataRequestWithToken(LoggedInUserModel loggedInUserModel, User newUser) {
+
+        response = given()
+                .header("Content-type", "application/json")
+                .header("Authorization", loggedInUserModel.getAccessToken())
                 .and()
                 .body(newUser)
                 .when()
                 .patch("api/auth/user");
 
-        System.out.println(response.body().asString());
-        System.out.println(response.statusCode());
+
+
     }
 
 
     @Step
-    public LoggedInUser getLoggedInUser(User user) {
+    public LoggedInUserModel getLoggedInUser(User user) {
 
         CreateUserStep createUserStep = new CreateUserStep();
 
         createUserStep.sendCreateUserRequest(user);
-
-        System.out.println(new Gson().toJson(user));
 
         return createUserStep.getLoggedInUser();
     }
 
 
     @Step
-    public void clearUserData() {
+    public void clearUserData(LoggedInUserModel loggedInUserModel) {
+        CreateUserStep createUserStep = new CreateUserStep();
 
+        createUserStep.sendDeleteUserRequest(loggedInUserModel);
     }
 
     @Step

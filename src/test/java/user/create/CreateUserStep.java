@@ -1,9 +1,10 @@
-package user;
+package user.create;
 
-import com.google.gson.Gson;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import org.hamcrest.Matchers;
+import user.LoggedInUserModel;
+import user.User;
 
 import static io.restassured.RestAssured.given;
 import static org.apache.http.HttpStatus.SC_OK;
@@ -25,45 +26,37 @@ public class CreateUserStep {
                 .when()
                 .post("api/auth/register");
 
-        System.out.println(response.body().asString());
-        System.out.println(response.statusCode());
 
     }
 
     @Step
-    public LoggedInUser getLoggedInUser() {
+    public LoggedInUserModel getLoggedInUser() {
         if (response.statusCode() == SC_OK) {
 
 
-            LoggedInUser loggedInUser = new LoggedInUser();
-            loggedInUser = response.body().as(LoggedInUser.class);
+            LoggedInUserModel loggedInUserModel = new LoggedInUserModel();
+            loggedInUserModel = response.body().as(LoggedInUserModel.class);
 
-            return loggedInUser;
+            return loggedInUserModel;
         }
         else {
 
-            return new LoggedInUser();
+            return new LoggedInUserModel();
         }
     }
 
     @Step
-    public void sendDeleteUserRequest(LoggedInUser loggedInUser) {
+    public void sendDeleteUserRequest(LoggedInUserModel loggedInUserModel) {
 
-        if (loggedInUser.getAccessToken() != null) {
+        if (loggedInUserModel.getAccessToken() != null) {
 
             response = given()
                     .header("Content-type", "application/json")
-                    .header("Authorization", loggedInUser.getAccessToken())
+                    .header("Authorization", loggedInUserModel.getAccessToken())
                     //.auth().oauth2("подставь_сюда_свой_токен")
                     .when()
                     .delete("api/auth/user");
 
-
-            Gson gson = new Gson();
-
-            System.out.println(gson.toJson(loggedInUser.getAccessToken()));
-            System.out.println(response.statusCode());
-            System.out.println(response.body().asString());
         }
     }
 

@@ -1,16 +1,20 @@
 package user.patch;
 
 import io.restassured.RestAssured;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import user.LoggedInUser;
+import user.LoggedInUserModel;
 import user.User;
+
+import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 
 public class PatchUserTest {
 
     User user;
 
-    LoggedInUser loggedInUser;
+    LoggedInUserModel loggedInUserModel;
 
     PatchUserStep patchUserStep;
 
@@ -25,22 +29,49 @@ public class PatchUserTest {
 
         patchUserStep = new PatchUserStep();
 
-        loggedInUser = patchUserStep.getLoggedInUser(user);
-
-
+        loggedInUserModel = patchUserStep.getLoggedInUser(user);
     }
 
     @Test
-    public void nullTest() {
+    public void patchUserDataTest() {
 
         User newUser = new User();
 
         newUser.generateNewUser();
 
-        patchUserStep.sendPatchUserDataRequestWithToken(loggedInUser, newUser);
+        patchUserStep.sendPatchUserDataRequestWithToken(loggedInUserModel, newUser);
 
-        patchUserStep.sendGetUserDataRequestWithToken(loggedInUser);
+        patchUserStep.sendGetUserDataRequestWithToken(loggedInUserModel);
+
+        patchUserStep.checkResponseCode(SC_OK);
+        patchUserStep.checkBodyFieldNotNull("user");
+        patchUserStep.checkBodyFieldEqualsObject("success", true);
+
+    }
+
+    @Test
+    public void getUserDataTest() {
+        patchUserStep.sendGetUserDataRequestWithToken(loggedInUserModel);
+
+        patchUserStep.checkResponseCode(SC_OK);
+        patchUserStep.checkBodyFieldNotNull("user");
+        patchUserStep.checkBodyFieldEqualsObject("success", true);
+    }
+
+    @Test
+    public void patchUserDataWithOutTokenReturns401() {
+        patchUserStep.sendPatchUserDataRequestWithOutToken();
+
+        patchUserStep.checkResponseCode(SC_UNAUTHORIZED);
+        patchUserStep.checkBodyFieldEqualsObject("success", false);
+        patchUserStep.checkBodyFieldNotNull("message");
+
+    }
 
 
+
+    @After
+    public void clearUserData() {
+        patchUserStep.clearUserData(loggedInUserModel);
     }
 }
