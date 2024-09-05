@@ -1,11 +1,11 @@
 package user.create;
 
 import io.restassured.RestAssured;
+import model.user.LoggedInUserModel;
+import model.user.User;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import model.user.LoggedInUserModel;
-import model.user.User;
 
 import static org.apache.http.HttpStatus.SC_FORBIDDEN;
 import static org.apache.http.HttpStatus.SC_OK;
@@ -23,8 +23,6 @@ public class CreateUserTest {
         RestAssured.baseURI = "https://stellarburgers.nomoreparties.site";
 
         user = new User(0);
-
-        user.generateNewUser();
 
         createUserStep = new CreateUserStep();
     }

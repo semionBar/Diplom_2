@@ -1,21 +1,20 @@
 package user.login;
 
+import groovy.lang.Newify;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
-import org.hamcrest.Matchers;
-import shared.SharedStep;
-import user.create.CreateUserStep;
 import model.user.LoggedInUserModel;
 import model.user.User;
+import shared.SharedStep;
+import user.create.CreateUserStep;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.equalTo;
 
 public class LoginUserStep {
 
     Response response;
 
-    @Step
+    @Step("Отправить запрос на логин")
     public void sendLoginUserRequest(User user) {
 
 
@@ -30,7 +29,7 @@ public class LoginUserStep {
 
     }
 
-    @Step
+    @Step("Получить модель залогиненного пользователя")
     public LoggedInUserModel getLoggedInUser(User user) {
 
         sendLoginUserRequest(user);
@@ -51,16 +50,13 @@ public class LoginUserStep {
         return user;
     }
 
-    @Step
+    @Step("Создать нового пользователя")
     public User createNewUser() {
-        User user = new User();
 
-        user.generateNewUser();
-
-        return user;
+        return new User(0);
     }
 
-    @Step
+    @Step("Зарегистрировать нового пользователя")
     public void registerUser(User user) {
 
         CreateUserStep createUserStep = new CreateUserStep();
@@ -68,7 +64,7 @@ public class LoginUserStep {
         createUserStep.sendCreateUserRequest(user);
     }
 
-    @Step
+    @Step("Очистить данные пользователя")
     public void clearUserData(LoggedInUserModel loggedInUserModel) {
         SharedStep.sendDeleteUserRequest(loggedInUserModel, response);
     }

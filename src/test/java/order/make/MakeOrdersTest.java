@@ -1,10 +1,9 @@
 package order.make;
 
 import com.google.gson.Gson;
+import io.restassured.RestAssured;
 import model.ingredient.IngredientIdListRequestModel;
 import model.ingredient.IngredientListResponseModel;
-import io.restassured.RestAssured;
-import model.ingredient.IngredientModel;
 import model.user.LoggedInUserModel;
 import model.user.User;
 import org.junit.After;
@@ -14,7 +13,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.apache.http.HttpStatus.*;
+import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
+import static org.apache.http.HttpStatus.SC_INTERNAL_SERVER_ERROR;
 
 public class MakeOrdersTest {
 
@@ -65,8 +65,6 @@ public class MakeOrdersTest {
 
         ingredientIdListRequestModel.setIngredients(hashList);
 
-        System.out.println(new Gson().toJson(ingredientIdListRequestModel));
-
         makeOrdersStep.sendMakeOrderRequestWithOutToken(ingredientIdListRequestModel);
 
         makeOrdersStep.checkResponseCode(SC_BAD_REQUEST);
@@ -79,8 +77,6 @@ public class MakeOrdersTest {
         ingredientIdListRequestModel = new IngredientIdListRequestModel();
 
         ingredientIdListRequestModel.setIngredients(List.of("1234567890"));
-
-        System.out.println(new Gson().toJson(ingredientIdListRequestModel));
 
         makeOrdersStep.sendMakeOrderRequestWithOutToken(ingredientIdListRequestModel);
 

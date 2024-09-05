@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import model.ingredient.IngredientIdListRequestModel;
-import model.order.Order;
 import model.order.OrderListResponseModel;
 import model.user.LoggedInUserModel;
 import model.user.User;
@@ -18,29 +17,28 @@ import static io.restassured.RestAssured.given;
 public class GetUserOrdersStep {
 
     Response response;
-    @Step
+
+    private final String getOrdersPath = "/api/orders";
+    @Step("Отправить запрос на получение заказов пользователя без токена")
     public void sendGetUserOrdersWithoutToken() {
 
         response = given()
                 .header("Content-type", "application/json")
-                .get("/api/orders");
+                .get(getOrdersPath);
 
-        System.out.println(response.body().asString());
-        System.out.println(response.statusCode());
     }
 
-    @Step
+    @Step("Отправить запрос на получение заказов пользователя с токеном")
     public void sendGetUserOrdersWithToken(LoggedInUserModel loggedInUserModel) {
 
         response = given()
                 .header("Content-type", "application/json")
                 .header("Authorization", loggedInUserModel.getAccessToken())
-                .get("/api/orders");
+                .get(getOrdersPath);
 
-        System.out.println(response.body().asString());
     }
 
-    @Step
+    @Step("Получить модель ответа залогиненого пользователя")
     public LoggedInUserModel getLoggedInUserModel(User user) {
 
         CreateUserStep createUserStep = new CreateUserStep();
@@ -54,13 +52,13 @@ public class GetUserOrdersStep {
         return loggedInUserModel;
     }
 
-    @Step
+    @Step("Очистить данные пользователя")
     public void clearUserData(LoggedInUserModel loggedInUserModel) {
         SharedStep.sendDeleteUserRequest(loggedInUserModel, response);
     }
 
 
-    @Step
+    @Step("Проверить, что количество заказов равно ожидаеиому количеству")
     public void checkOrderListContainsExactAmount(int amountOfOrders) {
         OrderListResponseModel orderListResponseModel;
 
@@ -68,10 +66,9 @@ public class GetUserOrdersStep {
 
         Assert.assertEquals(orderListResponseModel.getOrders().size(), amountOfOrders);
 
-        System.out.println(new Gson().toJson(orderListResponseModel));
     }
 
-    @Step
+    @Step("Оформить заказ")
     public void makeOrders(int amountOfOrders, LoggedInUserModel loggedInUserModel) {
         MakeOrdersStep makeOrdersStep = new MakeOrdersStep();
 
@@ -87,12 +84,12 @@ public class GetUserOrdersStep {
         }
     }
 
-    @Step
+    @Step("Проверить, что код овета ")
     public void checkResponseCode(int expectedCode) {
         SharedStep.checkResponseCode(expectedCode, response);
     }
 
-    @Step("Проверить поле из body равно ожидаемому значению")
+    @Step("Проверить, что поле из body равно ожидаемому значению")
     public void checkBodyFieldEqualsObject(String field, Object object) {
         SharedStep.checkBodyFieldEqualsObject(field, object, response);
     }

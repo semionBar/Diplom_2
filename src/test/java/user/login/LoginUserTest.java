@@ -1,11 +1,11 @@
 package user.login;
 
 import io.restassured.RestAssured;
+import model.user.LoggedInUserModel;
+import model.user.User;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import model.user.LoggedInUserModel;
-import model.user.User;
 
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
@@ -45,7 +45,7 @@ public class LoginUserTest {
     }
 
     @Test
-    public void badLoginOrPasswordReturns401() {
+    public void wrongPasswordReturns401() {
 
         loginUserStep = new LoginUserStep();
 
@@ -53,7 +53,7 @@ public class LoginUserTest {
 
         loggedInUserModel = loginUserStep.getLoggedInUser(user);
 
-        user.generateNewUser();
+        user.setPassword("1234567890");
 
         loginUserStep.sendLoginUserRequest(user);
 

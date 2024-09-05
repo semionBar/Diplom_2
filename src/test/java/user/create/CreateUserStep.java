@@ -2,21 +2,19 @@ package user.create;
 
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
-import org.hamcrest.Matchers;
 import model.user.LoggedInUserModel;
 import model.user.User;
 import shared.SharedStep;
 
 import static io.restassured.RestAssured.given;
 import static org.apache.http.HttpStatus.SC_OK;
-import static org.hamcrest.CoreMatchers.equalTo;
 
 public class CreateUserStep {
 
     Response response;
 
 
-    @Step
+    @Step("Отправить запрос на создание нового пользователя")
     public void sendCreateUserRequest(User user) {
 
         response = given()
@@ -30,7 +28,7 @@ public class CreateUserStep {
 
     }
 
-    @Step
+    @Step("Получить модель залогиненного пользователя")
     public LoggedInUserModel getLoggedInUser() {
         if (response.statusCode() == SC_OK) {
 
@@ -46,12 +44,12 @@ public class CreateUserStep {
         }
     }
 
-    @Step
+    @Step("Очистить данные пользователя")
     public void clearUserData(LoggedInUserModel loggedInUserModel) {
         SharedStep.sendDeleteUserRequest(loggedInUserModel, response);
     }
 
-    @Step
+    @Step("Проверить, что код ответа равен ожидаемому")
     public void checkResponseCode(int expectedCode) {
         SharedStep.checkResponseCode(expectedCode, response);
     }

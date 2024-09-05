@@ -22,6 +22,7 @@ public class SharedStep {
         response.then().assertThat().body(field, Matchers.notNullValue());
     }
 
+    @Step("Отправить запрос на удаление пользователя")
     public static void sendDeleteUserRequest(LoggedInUserModel loggedInUserModel, Response response) {
 
         if (loggedInUserModel != null) {
@@ -32,8 +33,6 @@ public class SharedStep {
                         //.auth().oauth2("подставь_сюда_свой_токен")
                         .when()
                         .delete("api/auth/user");
-
-                System.out.println(response.body().asString());
 
             }
         }

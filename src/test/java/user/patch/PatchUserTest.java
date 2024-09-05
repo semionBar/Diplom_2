@@ -1,18 +1,17 @@
 package user.patch;
 
 import io.restassured.RestAssured;
+import model.user.LoggedInUserModel;
+import model.user.User;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import model.user.LoggedInUserModel;
-import model.user.User;
 
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 
 public class PatchUserTest {
 
-    User user;
 
     LoggedInUserModel loggedInUserModel;
 

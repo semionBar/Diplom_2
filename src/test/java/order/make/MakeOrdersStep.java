@@ -1,17 +1,15 @@
 package order.make;
 
-import model.ingredient.IngredientIdListRequestModel;
-import model.ingredient.IngredientListResponseModel;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
-import model.ingredient.IngredientModel;
+import model.ingredient.IngredientIdListRequestModel;
+import model.ingredient.IngredientListResponseModel;
 import model.order.OrderResponseModel;
 import model.user.LoggedInUserModel;
 import model.user.User;
 import shared.SharedStep;
 import user.create.CreateUserStep;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
@@ -20,31 +18,33 @@ public class MakeOrdersStep {
 
     Response response;
 
-    @Step
+    private final String getIngredientsPath = "api/ingredients";
+    private final String getOrdersPath = "api/orders";
+
+
+
+    @Step("Отправить запрос на получение списка всех доступных ингредиентов")
     public void sendGetIngredientsListRequest() {
 
         response = given()
                 .header("Content-type", "application/json")
-                .get("api/ingredients");
+                .get(getIngredientsPath);
 
     }
 
-    @Step
+    @Step("Отправить запрос на создание заказа без токена")
     public void sendMakeOrderRequestWithOutToken(IngredientIdListRequestModel ingredientIdListRequestModel) {
 
         response = given()
                 .header("Content-type", "application/json")
                 .and()
                 .body(ingredientIdListRequestModel)
-                .post("api/orders");
+                .post(getOrdersPath);
 
-
-        System.out.println(response.statusCode());
-        System.out.println(response.body().asString());
 
     }
 
-    @Step
+    @Step("Отправить запрос на создание заказа с токеном")
     public void sendMakeOrderRequestWithToken(IngredientIdListRequestModel ingredientIdListRequestModel, LoggedInUserModel loggedInUserModel) {
 
         response = given()
@@ -52,15 +52,12 @@ public class MakeOrdersStep {
                 .header("Authorization", loggedInUserModel.getAccessToken())
                 .and()
                 .body(ingredientIdListRequestModel)
-                .post("api/orders");
+                .post(getOrdersPath);
 
-
-        System.out.println(response.statusCode());
-        System.out.println(response.body().asString());
 
     }
 
-    @Step
+    @Step("Получить модель ответа залогиненного пользователя")
     public LoggedInUserModel getLoggedInUserModel(User user) {
         CreateUserStep createUserStep = new CreateUserStep();
 
@@ -70,7 +67,7 @@ public class MakeOrdersStep {
     }
 
 
-    @Step
+    @Step("Получить модель ответазаказов пользователя")
     public OrderResponseModel getOrderResponseModel() {
         OrderResponseModel orderResponseModel = new OrderResponseModel();
 
@@ -79,7 +76,7 @@ public class MakeOrdersStep {
         return orderResponseModel;
     }
 
-    @Step
+    @Step("Получить модель ответа всех доступных ингредиентов")
     public IngredientListResponseModel getIngredientList() {
 
         IngredientListResponseModel ingredientListResponseModel = new IngredientListResponseModel();
@@ -89,7 +86,7 @@ public class MakeOrdersStep {
         return ingredientListResponseModel;
     }
 
-    @Step
+    @Step("Получить модель запроса заказов пользователя")
     public IngredientIdListRequestModel getIngredientIdListRequestModel() {
         IngredientIdListRequestModel ingredientIdListRequestModel = new IngredientIdListRequestModel();
 
@@ -100,17 +97,17 @@ public class MakeOrdersStep {
         return ingredientIdListRequestModel;
     }
 
-    @Step
+    @Step("Очистить данные пользователя")
     public void clearUserData(LoggedInUserModel loggedInUserModel) {
         SharedStep.sendDeleteUserRequest(loggedInUserModel, response);
     }
 
-    @Step
+    @Step("Проверить, что фактический код ответа соответствует ожидаемому")
     public void checkResponseCode(int expectedCode) {
         SharedStep.checkResponseCode(expectedCode, response);
     }
 
-    @Step("Проверить поле из body равно ожидаемому значению")
+    @Step("Проверить, что поле из body равно ожидаемому значению")
     public void checkBodyFieldEqualsObject(String field, Object object) {
         SharedStep.checkBodyFieldEqualsObject(field, object, response);
     }

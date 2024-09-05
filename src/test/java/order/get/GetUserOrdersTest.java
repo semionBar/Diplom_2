@@ -1,6 +1,5 @@
 package order.get;
 
-import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import model.user.LoggedInUserModel;
 import model.user.User;
