@@ -22,7 +22,7 @@ public class CreateUserTest {
     public void setUp() {
         RestAssured.baseURI = "https://stellarburgers.nomoreparties.site";
 
-        user = new User();
+        user = new User(0);
 
         user.generateNewUser();
 

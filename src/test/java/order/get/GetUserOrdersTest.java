@@ -9,6 +9,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
+
 public class GetUserOrdersTest {
 
 
@@ -37,6 +40,8 @@ public class GetUserOrdersTest {
         getUserOrdersStep.sendGetUserOrdersWithToken(loggedInUserModel);
 
         getUserOrdersStep.checkOrderListContainsExactAmount(0);
+        getUserOrdersStep.checkBodyFieldEqualsObject("success", true);
+        getUserOrdersStep.checkResponseCode(SC_OK);
     }
 
     @Test
@@ -49,7 +54,21 @@ public class GetUserOrdersTest {
         getUserOrdersStep.sendGetUserOrdersWithToken(loggedInUserModel);
 
         getUserOrdersStep.checkOrderListContainsExactAmount(amountOfOrders);
+        getUserOrdersStep.checkBodyFieldEqualsObject("success", true);
+        getUserOrdersStep.checkResponseCode(SC_OK);
+
     }
+
+    @Test
+    public void getOrdersWithoutToken() {
+        getUserOrdersStep.sendGetUserOrdersWithoutToken();
+
+        getUserOrdersStep.checkBodyFieldNotNull("message");
+        getUserOrdersStep.checkBodyFieldEqualsObject("success", false);
+        getUserOrdersStep.checkResponseCode(SC_UNAUTHORIZED);
+
+    }
+
 
     @After
     public void clearUserData() {

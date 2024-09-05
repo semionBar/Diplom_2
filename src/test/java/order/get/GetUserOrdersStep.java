@@ -26,6 +26,7 @@ public class GetUserOrdersStep {
                 .get("/api/orders");
 
         System.out.println(response.body().asString());
+        System.out.println(response.statusCode());
     }
 
     @Step
@@ -46,7 +47,7 @@ public class GetUserOrdersStep {
 
         createUserStep.sendCreateUserRequest(user);
 
-        LoggedInUserModel loggedInUserModel = new LoggedInUserModel();
+        LoggedInUserModel loggedInUserModel;
 
         loggedInUserModel = createUserStep.getLoggedInUser();
 
@@ -58,20 +59,6 @@ public class GetUserOrdersStep {
         SharedStep.sendDeleteUserRequest(loggedInUserModel, response);
     }
 
-    @Step
-    public void checkResponseCode(int expectedCode) {
-        SharedStep.checkResponseCode(expectedCode, response);
-    }
-
-    @Step("Проверить поле из body равно ожидаемому значению")
-    public void checkBodyFieldEqualsObject(String field, Object object) {
-        SharedStep.checkBodyFieldEqualsObject(field, object, response);
-    }
-
-    @Step("Проверить, что поле из body присутствует в ответе")
-    public void checkBodyFieldNotNull(String field) {
-        SharedStep.checkBodyFieldNotNull(field, response);
-    }
 
     @Step
     public void checkOrderListContainsExactAmount(int amountOfOrders) {
@@ -88,7 +75,7 @@ public class GetUserOrdersStep {
     public void makeOrders(int amountOfOrders, LoggedInUserModel loggedInUserModel) {
         MakeOrdersStep makeOrdersStep = new MakeOrdersStep();
 
-        IngredientIdListRequestModel ingredientIdListRequestModel = new IngredientIdListRequestModel();
+        IngredientIdListRequestModel ingredientIdListRequestModel;
 
         for (int i = 0; i < amountOfOrders; i++) {
 
@@ -98,6 +85,21 @@ public class GetUserOrdersStep {
 
             makeOrdersStep.sendMakeOrderRequestWithToken(ingredientIdListRequestModel, loggedInUserModel);
         }
+    }
+
+    @Step
+    public void checkResponseCode(int expectedCode) {
+        SharedStep.checkResponseCode(expectedCode, response);
+    }
+
+    @Step("Проверить поле из body равно ожидаемому значению")
+    public void checkBodyFieldEqualsObject(String field, Object object) {
+        SharedStep.checkBodyFieldEqualsObject(field, object, response);
+    }
+
+    @Step("Проверить, что поле из body присутствует в ответе")
+    public void checkBodyFieldNotNull(String field) {
+        SharedStep.checkBodyFieldNotNull(field, response);
     }
 
 }

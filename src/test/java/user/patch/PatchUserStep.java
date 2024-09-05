@@ -15,7 +15,7 @@ public class PatchUserStep {
     Response response;
 
     private final String userDataPath = "api/auth/user";
-    @Step
+    @Step("Отправить запрос на обновление данных пользователя с токеном")
     public void sendGetUserDataRequestWithToken(LoggedInUserModel loggedInUserModel) {
 
         response = given()
@@ -27,22 +27,10 @@ public class PatchUserStep {
     }
 
     @Step
-    public void sendGetUserDataRequestWitOutToken() {
-
-        response = given()
-                .header("Content-type", "application/json")
-                //.header("Authorization", loggedInUser.getAccessToken())
-                .when()
-                .get(userDataPath);
-
-    }
-
-    @Step
     public void sendPatchUserDataRequestWithOutToken() {
 
         response = given()
                 .header("Content-type", "application/json")
-                //.header("Authorization", loggedInUser.getAccessToken())
                 .when()
                 .get(userDataPath);
 

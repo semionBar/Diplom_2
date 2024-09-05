@@ -49,12 +49,7 @@ public class MakeOrdersTest {
 
     @Test
     public void makeOrderWithTokenTest() {
-
-        User user = new User();
-
-        user.generateNewUser();
-
-        loggedInUserModel = makeOrdersStep.getLoggedInUserModel(user);
+        loggedInUserModel = makeOrdersStep.getLoggedInUserModel(new User(0));
 
         ingredientIdListRequestModel = makeOrdersStep.getIngredientIdListRequestModel();
 

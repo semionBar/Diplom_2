@@ -23,23 +23,15 @@ public class PatchUserTest {
 
         RestAssured.baseURI = "https://stellarburgers.nomoreparties.site";
 
-        user = new User();
-
-        user.generateNewUser();
-
         patchUserStep = new PatchUserStep();
 
-        loggedInUserModel = patchUserStep.getLoggedInUser(user);
+        loggedInUserModel = patchUserStep.getLoggedInUser(new User(0));
     }
 
     @Test
     public void patchUserDataTest() {
 
-        User newUser = new User();
-
-        newUser.generateNewUser();
-
-        patchUserStep.sendPatchUserDataRequestWithToken(loggedInUserModel, newUser);
+        patchUserStep.sendPatchUserDataRequestWithToken(loggedInUserModel, new User(0));
 
         patchUserStep.sendGetUserDataRequestWithToken(loggedInUserModel);
 
