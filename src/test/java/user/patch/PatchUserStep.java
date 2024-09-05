@@ -64,7 +64,7 @@ public class PatchUserStep {
 
     @Step("Очистить данные пользователя")
     public void clearUserData(LoggedInUserModel loggedInUserModel) {
-        SharedStep.sendDeleteUserRequest(loggedInUserModel, response);
+        SharedStep.sendDeleteUserRequest(loggedInUserModel);
     }
 
     @Step("Проверить код ответа")

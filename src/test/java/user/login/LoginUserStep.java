@@ -1,6 +1,5 @@
 package user.login;
 
-import groovy.lang.Newify;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import model.user.LoggedInUserModel;
@@ -66,7 +65,7 @@ public class LoginUserStep {
 
     @Step("Очистить данные пользователя")
     public void clearUserData(LoggedInUserModel loggedInUserModel) {
-        SharedStep.sendDeleteUserRequest(loggedInUserModel, response);
+        SharedStep.sendDeleteUserRequest(loggedInUserModel);
     }
 
     @Step("Проверить, что код ответа равен ожидаемому")

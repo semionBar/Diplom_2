@@ -1,6 +1,6 @@
 package order.get;
 
-import com.google.gson.Gson;
+
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import model.ingredient.IngredientIdListRequestModel;
@@ -54,7 +54,7 @@ public class GetUserOrdersStep {
 
     @Step("Очистить данные пользователя")
     public void clearUserData(LoggedInUserModel loggedInUserModel) {
-        SharedStep.sendDeleteUserRequest(loggedInUserModel, response);
+        SharedStep.sendDeleteUserRequest(loggedInUserModel);
     }
 
 

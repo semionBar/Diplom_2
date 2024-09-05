@@ -33,7 +33,7 @@ public class CreateUserStep {
         if (response.statusCode() == SC_OK) {
 
 
-            LoggedInUserModel loggedInUserModel = new LoggedInUserModel();
+            LoggedInUserModel loggedInUserModel;
             loggedInUserModel = response.body().as(LoggedInUserModel.class);
 
             return loggedInUserModel;
@@ -46,7 +46,7 @@ public class CreateUserStep {
 
     @Step("Очистить данные пользователя")
     public void clearUserData(LoggedInUserModel loggedInUserModel) {
-        SharedStep.sendDeleteUserRequest(loggedInUserModel, response);
+        SharedStep.sendDeleteUserRequest(loggedInUserModel);
     }
 
     @Step("Проверить, что код ответа равен ожидаемому")

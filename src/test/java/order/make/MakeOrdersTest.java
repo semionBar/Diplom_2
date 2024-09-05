@@ -1,6 +1,5 @@
 package order.make;
 
-import com.google.gson.Gson;
 import io.restassured.RestAssured;
 import model.ingredient.IngredientIdListRequestModel;
 import model.ingredient.IngredientListResponseModel;

@@ -4,7 +4,6 @@ import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import model.ingredient.IngredientIdListRequestModel;
 import model.ingredient.IngredientListResponseModel;
-import model.order.OrderResponseModel;
 import model.user.LoggedInUserModel;
 import model.user.User;
 import shared.SharedStep;
@@ -67,19 +66,10 @@ public class MakeOrdersStep {
     }
 
 
-    @Step("Получить модель ответазаказов пользователя")
-    public OrderResponseModel getOrderResponseModel() {
-        OrderResponseModel orderResponseModel = new OrderResponseModel();
-
-        orderResponseModel = response.body().as(OrderResponseModel.class);
-
-        return orderResponseModel;
-    }
-
     @Step("Получить модель ответа всех доступных ингредиентов")
     public IngredientListResponseModel getIngredientList() {
 
-        IngredientListResponseModel ingredientListResponseModel = new IngredientListResponseModel();
+        IngredientListResponseModel ingredientListResponseModel;
 
         ingredientListResponseModel = response.body().as(IngredientListResponseModel.class);
 
@@ -99,7 +89,7 @@ public class MakeOrdersStep {
 
     @Step("Очистить данные пользователя")
     public void clearUserData(LoggedInUserModel loggedInUserModel) {
-        SharedStep.sendDeleteUserRequest(loggedInUserModel, response);
+        SharedStep.sendDeleteUserRequest(loggedInUserModel);
     }
 
     @Step("Проверить, что фактический код ответа соответствует ожидаемому")

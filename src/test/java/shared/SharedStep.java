@@ -23,11 +23,11 @@ public class SharedStep {
     }
 
     @Step("Отправить запрос на удаление пользователя")
-    public static void sendDeleteUserRequest(LoggedInUserModel loggedInUserModel, Response response) {
+    public static void sendDeleteUserRequest(LoggedInUserModel loggedInUserModel) {
 
         if (loggedInUserModel != null) {
             if (loggedInUserModel.getAccessToken() != null) {
-                response = given()
+                given()
                         .header("Content-type", "application/json")
                         .header("Authorization", loggedInUserModel.getAccessToken())
                         //.auth().oauth2("подставь_сюда_свой_токен")
